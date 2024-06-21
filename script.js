@@ -13,65 +13,65 @@ const allSongs = [{
   },
   {
     id: 1,
-    title: "Humnawa mere",
-    artist: "Jubin",
-    duration: "6:20",
-    src: "./song.mp3",
+    title: "Sajni",
+    artist: "Arijit Singh",
+    duration: "2:26",
+    src: "./sajni.mp3",
   },
   {
     id: 2,
-    title: "Humnawa mere",
-    artist: "Jubin",
-    duration: "6:20",
-    src: "./song.mp3",
+    title: "Samjho Na",
+    artist: "Various",
+    duration: "2:40",
+    src: "./samjho_na.mp3",
   },
   {
-    title: "Humnawa mere",
-    artist: "Jubin",
-    duration: "6:20",
-    src: "./song.mp3",
+    title: "Safar",
+    artist: "MixSingh",
+    duration: "3:26",
+    src: "./safar.mp3",
   },
   {
     id: 4,
-    title: "Never Not Favored",
-    artist: "Quincy Larson",
-    duration: "3:35",
-    src: "https://cdn.freecodecamp.org/curriculum/js-music-player/never-not-favored.mp3",
+    title: "9:45",
+    artist: "Prabh",
+    duration: "2:03",
+    src: "./945.mp3",
   },
   {
     id: 5,
-    title: "From the Ground Up",
-    artist: "Quincy Larson",
-    duration: "3:12",
-    src: "https://cdn.freecodecamp.org/curriculum/js-music-player/from-the-ground-up.mp3",
+    title: "Khayaal",
+    artist: "Talwinder",
+    duration: "2:43",
+    src: "./khayaal.mp3",
   },
   {
     id: 6,
-    title: "Walking on Air",
-    artist: "Quincy Larson",
-    duration: "3:25",
-    src: "https://cdn.freecodecamp.org/curriculum/js-music-player/walking-on-air.mp3",
+    title: "Kya Mujhe Pyaar Hai",
+    artist: "KK",
+    duration: "4:43",
+    src: "./kmp.mp3",
   },
   {
     id: 7,
-    title: "Can't Stop Me. Can't Even Slow Me Down.",
-    artist: "Quincy Larson",
-    duration: "3:52",
-    src: "https://cdn.freecodecamp.org/curriculum/js-music-player/cant-stop-me-cant-even-slow-me-down.mp3",
+    title: "Labon Ko",
+    artist: "KK",
+    duration: "5:35",
+    src: "./labon.mp3",
   },
   {
     id: 8,
-    title: "The Surest Way Out is Through",
-    artist: "Quincy Larson",
-    duration: "3:10",
-    src: "https://cdn.freecodecamp.org/curriculum/js-music-player/the-surest-way-out-is-through.mp3",
+    title: "Perfect",
+    artist: "Ed Sheeren",
+    duration: "4:40",
+    src: "./perfect.mp3",
   },
   {
     id: 9,
-    title: "Chasing That Feeling",
-    artist: "Quincy Larson",
-    duration: "2:43",
-    src: "https://cdn.freecodecamp.org/curriculum/js-music-player/chasing-that-feeling.mp3",
+    title: "Sugar",
+    artist: "Maroon 5",
+    duration: "5:00",
+    src: "./sugar.mp3",
   },
 ]
 const audio = new Audio()
@@ -148,7 +148,18 @@ const deleteSong = (id) => {
     const resetButton = document.createElement('button');
     const resetText = document.createTextNode("Reset Playlist")
   resetButton.id = 'reset'
-  resetButton.ariaLabel="Reset playlist"
+  resetButton.ariaLabel="Reset playlist";
+  resetButton.appendChild(resetText)
+  playlistSongs.appendChild(resetButton)
+  resetButton.addEventListener('click',()=> {
+    userData.songs = [...allSongs]
+    renderSongs(sortSongs());
+    pauseSong();
+    setPlayerDisplay();
+    setPlayButtonAccessibleText();
+    resetButton.remove()
+  })
+
   }
 }
 
@@ -205,6 +216,22 @@ nextButton.addEventListener("click", playNextSong);
 previousButton.addEventListener("click", playPreviousSong);
 
 shuffleButton.addEventListener("click", shuffle);
+
+audio.addEventListener("ended",()=>{
+  const currentSongIndex = getCurrentSongIndex()
+  const nextSongExists = userData.songs.length-1>currentSongIndex;
+if(nextSongExists){
+  playNextSong();
+}
+else{
+  userData.currentSong=null;
+  userData.songCurrentTime = 0;
+  pauseSong();
+  setPlayerDisplay();
+  setPlayButtonAccessibleText();
+  highlightCurrentSong()
+}
+})
 
 const sortSongs = (a, b) => {
   userData?.songs.sort((a, b) => {
